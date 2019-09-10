@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Container, Typography, TextField, Grid, InputAdornment, IconButton } from '@material-ui/core';
+import { Container, Typography, TextField, Grid, InputAdornment, IconButton, List, Divider } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
+import TodoList from '../../components/TodoList/';
 
 class TodoPage extends Component {
   constructor() {
@@ -24,7 +25,14 @@ class TodoPage extends Component {
 
     this.setState({
       todoData: '',
-      todos: [this.state.todoData, ...this.state.todos],
+      todos: [
+        {
+          id: this.state.todos.length + 1,
+          name: this.state.todoData,
+          status: 'active',
+        }, 
+        ...this.state.todos,
+      ],
     });
   }
   render() {
@@ -35,7 +43,7 @@ class TodoPage extends Component {
         <Grid container>
           <Grid item md="4"/>
           <Grid item md="4">
-            <Typography variant="h2">Todo App</Typography>
+            <Typography variant="h3">Todo App</Typography>
             <form onSubmit={this.handleSubmit}>
               <TextField
                 onChange={this.handleChange}
@@ -57,6 +65,16 @@ class TodoPage extends Component {
                 }}
                 />
             </form>
+            <Divider/>
+            {todos.length !== 0 ?
+              <List> 
+              {todos.map((todo, i) => {
+                return <TodoList key={i} todo={todo}/>
+              })}
+              </List>
+            :
+            <Typography align="center">No todos created yet.</Typography>
+            }
           </Grid>
           <Grid item md="4"/>
         </Grid>
