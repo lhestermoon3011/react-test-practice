@@ -3,6 +3,7 @@ import './App.css';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TodoPage from './pages/TodoPage';
+import Header from './components/Header';
 
 const theme = createMuiTheme({
   typography: {
@@ -34,6 +35,7 @@ function App() {
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
+      <Header/>
       <TodoPage/>
     </MuiThemeProvider>
   );

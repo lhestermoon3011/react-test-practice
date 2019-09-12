@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Container, Typography, TextField, Grid, InputAdornment, IconButton, List, Divider } from '@material-ui/core';
-import { Add } from '@material-ui/icons';
+import { Container, Typography, Grid, List } from '@material-ui/core';
 import TodoList from '../../components/TodoList/';
+import TodoForm from '../../components/TodoForm';
 
 class TodoPage extends Component {
   constructor() {
@@ -14,6 +14,8 @@ class TodoPage extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleFinished = this.handleFinished.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
   handleChange(e) {
     this.setState({
@@ -29,51 +31,55 @@ class TodoPage extends Component {
         {
           id: this.state.todos.length + 1,
           name: this.state.todoData,
-          status: 'active',
+          isCompleted: false,
         }, 
         ...this.state.todos,
       ],
     });
   }
+  handleFinished(id) {
+    const updatedTodos = this.state.todos.map(todo => {
+      if(todo.id === id) {
+        todo.isCompleted = !todo.isCompleted
+      }
+      return todo;
+    });
+
+    this.setState({
+      todos: [...updatedTodos],
+    });
+  }
+  handleDelete(id) {
+    this.setState({
+      todos: this.state.todos.filter(todo => todo.id !== id),
+    });
+  }
   render() {
     const { todoData, todos } = this.state;
-    console.log(todos);
+
     return (
       <Container style={{marginTop: '1rem'}}>
         <Grid container>
           <Grid item md="4"/>
           <Grid item md="4">
-            <Typography variant="h3">Todo App</Typography>
-            <form onSubmit={this.handleSubmit}>
-              <TextField
-                onChange={this.handleChange}
-                value={todoData}
-                name="todoData"
-                label="Add Todo"
-                margin="normal"
-                variant="outlined" 
-                color="primary" 
-                fullWidth
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton type="submit" edge="end">
-                        <Add/>
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-                />
-            </form>
-            <Divider/>
+            <TodoForm 
+              todoData={todoData} 
+              handleChange={this.handleChange}
+              handleSubmit={this.handleSubmit}/>
             {todos.length !== 0 ?
-              <List> 
+              <List style={{marginTop: '1rem'}}> 
               {todos.map((todo, i) => {
-                return <TodoList key={i} todo={todo}/>
+                return (
+                  <TodoList 
+                    key={i} 
+                    todo={todo}
+                    handleFinished={this.handleFinished}
+                    handleDelete={this.handleDelete}/>
+                )
               })}
               </List>
             :
-            <Typography align="center">No todos created yet.</Typography>
+              <Typography style={{marginTop: '1rem'}} align="center">No todos created yet.</Typography>
             }
           </Grid>
           <Grid item md="4"/>
